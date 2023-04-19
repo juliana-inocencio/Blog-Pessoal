@@ -7,9 +7,12 @@ import org.springframework.stereotype.Repository;
 import com.generation.blogpessoal.model.Postagem;
 import org.springframework.data.repository.query.Param;
 
-@Repository
 public interface PostagemRepository extends JpaRepository<Postagem,Long>{
-	
+	// JPA - SELECT * FROM tb_postagens WHERE titulo like "algumacoisa" ---  O JPA faz isso
+	// find faz papel do select
+	//by = where
+	// titulo = coluna que vamos fazer a busca
+	//JPA faz uma junção do sql com repository
 	public List<Postagem> findAllByTituloContainingIgnoreCase(@Param("Titulo")String titulo);
 	
 	

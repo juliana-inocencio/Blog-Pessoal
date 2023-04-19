@@ -23,8 +23,9 @@ import com.generation.blogpessoal.repository.PostagemRepository;
 
 import jakarta.validation.Valid;
 
-@RestController  //tornar essa classe uma controladora de rotas
-@RequestMapping("/postagens") // falar qal a rota para essas consultas
+@RestController  //tornar essa classe uma controladora de rotas - //indica que o código abaixo vai ser um controller ou um controlador da nossa API
+@RequestMapping("/postagens") // falar qual a rota para essas consultas 
+//("/postagens") - é o nome do caminho, endpoint  
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 
 public class PostagemController {
@@ -32,7 +33,8 @@ public class PostagemController {
 	@Autowired 
 	private PostagemRepository postagemRepository;
 	
-	@GetMapping
+	@GetMapping /*get é o verbo que vamos usar no insomnia. Só tem o get, então não tem complemento no 
+	insomnia*/
 	public ResponseEntity<List<Postagem>> getAll(){
 		return ResponseEntity.ok(postagemRepository.findAll());
 	}
@@ -45,9 +47,17 @@ public class PostagemController {
 	}
 	
 
-	@GetMapping("/titulo/{titulo}")
-	public ResponseEntity<List<Postagem>> getByTitulo(@PathVariable String titulo){
-		return ResponseEntity.ok(postagemRepository.findAllByTituloContainingIgnoreCase(titulo));
+	@GetMapping("/titulo/{titulo}") //aqui tem complemento, diferente do primeiro getmapping. 
+	/*Qual a diferença do que tá na chave e do que não está na chave?
+	o primeiro é o texto literal postagens/titulo. É o complemento do caminho
+	o segundo está entre chaves, pq ele é uma path variable, ou seja, uma variavel (espaço alocado na memoria) 
+	A palavra que eu quero achar no insomnia
+	*/
+	public ResponseEntity<List<Postagem>> getByTitulo(@PathVariable String titulo){ //é a mesma coisa {titulo}
+		return ResponseEntity.ok(postagemRepository.findAllByTituloContainingIgnoreCase(titulo)); 
+	/*findAllByTituloContainingIgnoreCase - vem do repository e precisa estar igual ela, é o mesmo comando
+	* ResponseEntity - classe que tem como objetivo trazer o status code, 
+	ele permite ver o insomnia o botão de status*/
 	}		
 	
 	@PostMapping
