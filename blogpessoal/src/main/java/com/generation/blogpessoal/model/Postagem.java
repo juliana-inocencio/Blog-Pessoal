@@ -1,4 +1,5 @@
 package com.generation.blogpessoal.model;
+//Model: modelagem do banco de dados(criação das tabelas)
 
 import java.time.LocalDateTime;
 
@@ -19,25 +20,41 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name = "tb_postagens") //define o nome da tabela
 public class Postagem {
 
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id //definir que a partir daqui é um id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //gerar o valor sozinho,como se fosse o auto_increment
+    private Long id; //id do tipo Long
 
-    @NotBlank(message = "O atributo título é Obrigatório!")
+    @NotBlank(message = "O atributo título é Obrigatório!") //obrigar o usuário a colocar o nome = notnull
     @Size(min = 5, max = 100, message = "O atributo título deve conter no mínimo 05 e no máximo 100 caracteres")
+    /*A anotação @Size define o valor Mínimo (min) e o valor Máximo (max) de caracteres do Atributo. Não é obrigatório
+    configurar os 2 parâmetros. Como o parâmetro max foi configurado, observe que o mesmo valor informado será inserido 
+    na definição dos Atributos titulo (varchar(100)) e texto (varchar(1000)) na tabela tb_postagens no Banco de dados. 
+    Você pode configurar uma mensagem para o usuário através do Atributo message.*/
     private String titulo;
 
-    @NotBlank(message = "O atributo título é Obrigatório!")
-    @Size(min = 10, max = 1000, message = "O atributo título deve conter no mínimo 10 e no máximo 1000 caracteres")
+    @NotBlank(message = "O atributo texto é Obrigatório!")
+    @Size(min = 10, max = 1000, message = "O atributo texto deve conter no mínimo 10 e no máximo 1000 caracteres")
     private String texto;
 
-    @UpdateTimestamp
+    @UpdateTimestamp //AUTOMATIZA A DATA DA APLICAÇÃO PARA A DATA DO SISTEMA
     private LocalDateTime data;
     
     @ManyToOne
-    @JsonIgnoreProperties("postagem")
-    private Tema tema;
-
+    @JsonIgnoreProperties("postagem") // importante pra não exibir várias vezes a mesma informação, colocar o local onde se está
+    private Tema tema; // não precisaria chamar, pois estão no mesmo pacote, já são da família
+    
+    /* = FOREIGN KEY (TEMA_ID) REFERENCE TB_TEMA.ID
+    	-- @ManyToOne 🡪 (da relação de que se trata, levando em consideração da atual para a outra)
+    	-- @JsonIgnoreProperties("nomeDaClassAtual")
+    	-- Colocar Getters and Setters da Tema.
+    	-- FAZER DE TEMA PARA POSTAGEM TAMBÉM.
+     */
+    
+    @ManyToOne
+	@JsonIgnoreProperties("postagem")
+	private Usuario usuario;
+    
+    
 	public Long getId() {
 		return id;
 	}
@@ -70,12 +87,23 @@ public class Postagem {
 		this.data = data;
 	}
 
+	
+	//Tema
 	public Tema getTema() {
 		return tema;
 	}
 
 	public void setTema(Tema tema) {
 		this.tema = tema;
+	}
+	
+	//Usuario
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 	
 }

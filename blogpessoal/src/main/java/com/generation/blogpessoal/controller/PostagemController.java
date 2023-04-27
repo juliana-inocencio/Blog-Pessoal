@@ -27,20 +27,28 @@ import jakarta.validation.Valid;
 @RequestMapping("/postagens") // falar qual a rota para essas consultas 
 //("/postagens") - é o nome do caminho, endpoint  
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+/*@CrossOrigin é usada no controlador de uma aplicação web para permitir solicitações de recursos de domínios ou 
+servidores diferentes do domínio onde a aplicação está hospedada. Os atributos origins e allowedHeaders especificam as 
+origens permitidas e os cabeçalhos HTTP que são permitidos nas solicitações.*/
 
 public class PostagemController {
 	
 	@Autowired 
 	private PostagemRepository postagemRepository;
+	/*ele vai na repository e faz consulta no banco de dados 
+	Está fazendo a injeção de dependencias do repository (chamando para o rolê)*/
 	
 	@GetMapping /*get é o verbo que vamos usar no insomnia. Só tem o get, então não tem complemento no 
-	insomnia*/
-	public ResponseEntity<List<Postagem>> getAll(){
+	insomnia*/ 
+	
+	public ResponseEntity<List<Postagem>> getAll(){ //SELECT * FROM tb_postagens
 		return ResponseEntity.ok(postagemRepository.findAll());
+		/*A postagem tá dentro do list, pq ele cria uma collection list
+		e adiciona as postagens. Se eu não colocar dentro do list ele não consegue trazer todas*/
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Postagem> getById(@PathVariable Long id){
+	public ResponseEntity<Postagem> getById(@PathVariable Long id){ //SELECT * FROM tb_postagens where id = id;
 		return postagemRepository.findById(id)
 				.map(resp -> ResponseEntity.ok(resp))
 				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
@@ -54,6 +62,7 @@ public class PostagemController {
 	A palavra que eu quero achar no insomnia
 	*/
 	public ResponseEntity<List<Postagem>> getByTitulo(@PathVariable String titulo){ //é a mesma coisa {titulo}
+		//SELECT * FROM tb_postagens where titulo like "%titulo%";.
 		return ResponseEntity.ok(postagemRepository.findAllByTituloContainingIgnoreCase(titulo)); 
 	/*findAllByTituloContainingIgnoreCase - vem do repository e precisa estar igual ela, é o mesmo comando
 	* ResponseEntity - classe que tem como objetivo trazer o status code, 
@@ -65,7 +74,7 @@ public class PostagemController {
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(postagemRepository.save(postagem));
 	}
-	@PutMapping 
+	@PutMapping //UPDATE tb_postagens SET titulo = "titulo", texto = "texto", data = CURRENT_TIMESTAMP() WHERE id = id;
 	public ResponseEntity<Postagem> put(@Valid @RequestBody Postagem postagem){
 		return postagemRepository.findById(postagem.getId())
 				.map(resposta -> ResponseEntity.status(HttpStatus.OK)
@@ -73,7 +82,7 @@ public class PostagemController {
 				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
 
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseStatus(HttpStatus.NO_CONTENT) //DELETE FROM tb_postagens WHERE id = id;
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable Long id) {
 		Optional<Postagem> postagem = postagemRepository.findById(id);

@@ -23,7 +23,7 @@ import com.generation.blogpessoal.repository.TemaRepository;
 
 import jakarta.validation.Valid;
 
-@RestController
+@RestController //indica que o código abaixo vai ser um controller ou um controlador da nossa API -- tornar essa classe uma controladora de rotas
 @RequestMapping("/temas")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class TemaController {
@@ -44,8 +44,7 @@ public class TemaController {
     }
     
     @GetMapping("/descricao/{descricao}")
-    public ResponseEntity<List<Tema>> getByTitle(@PathVariable 
-    String descricao){
+    public ResponseEntity<List<Tema>> getByTitle(@PathVariable String descricao){
         return ResponseEntity.ok(temaRepository
             .findAllByDescricaoContainingIgnoreCase(descricao));
     }

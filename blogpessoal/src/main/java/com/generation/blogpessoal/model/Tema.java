@@ -18,23 +18,27 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "tb_temas")
 public class Tema {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@Id //definir que a partir daqui é um id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) //gerar o valor sozinho,como se fosse o auto_increment
+	private Long id; //id do tipo Long
 
 	//não permite que o Atributo seja Nulo, mas permite que ele contenha apenas Espaços em branco
-	@NotNull(message = "O Atributo Descrição é obrigatório")
+	@NotNull(message = "O Atributo Descrição é obrigatório") //obrigar o usuário a colocar o nome = notnull
 	private String descricao;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy="tema",cascade = CascadeType.REMOVE)
 	/* 1 tema para muitas postagens 
-	Lazy - de forma lenta
-	mappedBy - 
-	cascade = CascadeType.REMOVE - 
+	-- fetch 🡪 FetchType.LAZY = pede para que pegue tudo de forma lenta
+	-- mappedBy="tema" 🡪 é só pra One e não pro Many da relação
+	-- cascade = CascadeType.REMOVE 🡪 remove o tema, então remove todas as postagens desse tema junto
 	*/
-	@JsonIgnoreProperties("tema")
-	private List<Postagem> postagem;
 	
+	@JsonIgnoreProperties("tema") //Vai aparecer só o que eu pedi, se não colocar vou acabar exibindo tema-postagem-postagem-tema...um vai puxar o outro
+	
+	private List<Postagem> postagem; // é só pra One e não pro Many da relação
+	
+	
+	//getters and setters, não esqueça de fazer os da relação em seguida
 
 	public Long getId() {
 		return this.id;
